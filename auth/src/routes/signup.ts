@@ -1,5 +1,7 @@
 import express, { Request, Response } from 'express';
 import { body, validationResult } from 'express-validator';
+import jwt from 'jsonwebtoken';
+import { load } from 'ts-dotenv';
 
 import { RequestValidationError } from '../errors/request-validation-error';
 import { BadRequestError } from '../errors/bad-request-error';
@@ -27,6 +29,12 @@ router.post('/api/users/signup',
 
     const newUser = new UserModel({ email, password });
     await newUser.save();
+
+    const userJwt = jwt.sign(
+      { _id: newUser._id, email: newUser.email },
+      load({ JWT_SECRET: String }).JWT_SECRET,
+    );
+    req.session = { jwt: userJwt };
 
     res.send({ user: newUser });
 });
