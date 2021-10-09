@@ -1,26 +1,7 @@
-import express from 'express';
-import 'express-async-errors'
-import { json } from 'body-parser';
 import mongoose from 'mongoose';
+import { load } from 'ts-dotenv';
 
-import { currentUserRouter } from './routes/current-user';
-import { signinRouter } from './routes/signin';
-import { signoutRouter } from './routes/signout';
-import { signupRouter } from './routes/signup';
-import { errorHandler } from './middlewares/error-handlers';
-import { NotFoundError } from './errors/no-found-error';
-
-const app = express();
-app.use(json());
-
-app.use(currentUserRouter);
-app.use(signinRouter);
-app.use(signoutRouter);
-app.use(signupRouter);
-app.all('*', () => {
-  throw new NotFoundError();
-});
-app.use(errorHandler);
+import { app } from './app';
 
 const runDB = async () => {
   try {
@@ -31,4 +12,9 @@ const runDB = async () => {
   }
 }
 runDB();
-app.listen(3000, () => console.log('[Auth Service] Listening on port 3000'));
+app.listen(3000, () => {
+  if (!load({ JWT_SECRET: String }).JWT_SECRET) {
+    throw new Error('JWT_SECRET is required');
+  }
+  console.log('[Auth Service] Listening on port 3000');
+});
