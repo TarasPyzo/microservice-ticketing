@@ -3,25 +3,22 @@ import mongoose from 'mongoose';
 
 import { app } from '../app';
 
-let mongo;
+let mongoServer: any;
 
 beforeAll(async () => {
-  mongo = new MongoMemoryServer();
-  const mongoUri = await mongo.getUri();
-  await mongoose.connect(
-    mongoUri,
-    { useNewUrlParser: true, useUnifiedTopology: true },
-  );
+  mongoServer = await MongoMemoryServer.create();
+  const uri = mongoServer.getUri();
+  await mongoose.connect(mongoServer.getUri());
 });
 
 beforeEach(async () => {
-  const collections = await mongoose.conneciton.db.collections();
+  const collections = await mongoose.connection.db.collections();
   for (let collection of collections) {
     await collection.deleteMany({});
   }
 });
 
 afterAll(async () => {
-  await mongo.stop();
-  await mongoose.connection.close();
+  await mongoServer.stop();
+  await mongoose.disconnect();
 });
