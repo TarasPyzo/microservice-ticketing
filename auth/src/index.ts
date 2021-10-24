@@ -5,7 +5,11 @@ import { app } from './app';
 
 const runDB = async () => {
   try {
-    await mongoose.connect('mongodb://localhost:27017/ticketing-auth');
+    const MONGODB_URI = load({ MONGODB_URI: String }).MONGODB_URI;
+    if (!MONGODB_URI) {
+      throw new Error('MONGODB_URI is required');
+    }
+    await mongoose.connect(MONGODB_URI);
     console.log('Connected to ticketing-auth MongoDB');
   } catch (err) {
     console.log(err);

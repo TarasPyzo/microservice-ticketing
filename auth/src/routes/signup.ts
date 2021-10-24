@@ -3,10 +3,8 @@ import { body, validationResult } from 'express-validator';
 import jwt from 'jsonwebtoken';
 import { load } from 'ts-dotenv';
 
-import { RequestValidationError } from '../errors/request-validation-error';
-import { BadRequestError } from '../errors/bad-request-error';
 import { UserModel } from '../models/user';
-import { validateRequest } from '../middlewares/validate-request';
+import { RequestValidationError, BadRequestError, validateRequest } from '@tyro.asap.company/microservice-ticketing-lib';
 
 const router = express.Router();
 

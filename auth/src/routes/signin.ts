@@ -4,10 +4,8 @@ import jwt from 'jsonwebtoken';
 import { load } from 'ts-dotenv';
 
 import { Password } from '../services/password';
-import { RequestValidationError } from '../errors/request-validation-error';
-import { validateRequest } from '../middlewares/validate-request';
 import { UserModel } from '../models/user';
-import { BadRequestError } from '../errors/bad-request-error';
+import { RequestValidationError, validateRequest, BadRequestError } from '@tyro.asap.company/microservice-ticketing-lib';
 
 const router = express.Router();
 
